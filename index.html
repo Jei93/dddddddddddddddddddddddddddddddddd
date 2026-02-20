@@ -20,25 +20,22 @@
 <body class="min-h-screen flex flex-col items-center p-4">
 
     <div id="app" class="max-w-4xl w-full">
-        <!-- Barra de Estado con Debug -->
         <div id="status-bar" class="fixed top-0 left-0 w-full bg-slate-900 border-b border-white/10 text-center text-[10px] font-mono py-1 z-50 flex justify-center gap-4">
             <span>SISTEMA: <span id="status-text" class="text-indigo-400">CONECTANDO</span></span>
-            <span id="ai-debug" class="text-slate-500">GEMINI: LISTO</span>
+            <span id="ai-debug" class="text-slate-500">GEMINI: ESPERANDO</span>
         </div>
 
-        <!-- PANTALLA CARGA -->
         <div id="view-loading" class="py-24 text-center space-y-6">
             <div class="relative inline-block">
                 <div class="h-16 w-16 rounded-full border-4 border-indigo-500/20 border-t-indigo-500 animate-spin"></div>
             </div>
-            <p class="text-slate-400 font-bold uppercase tracking-widest text-xs">Inicializando Núcleo Gemini...</p>
+            <p id="loading-text" class="text-slate-400 font-bold uppercase tracking-widest text-xs">Inicializando Núcleo...</p>
         </div>
 
-        <!-- PANTALLA SETUP -->
         <div id="view-setup" class="hidden py-12 text-center space-y-8">
             <div class="space-y-2">
                 <h1 class="text-6xl font-black italic tracking-tighter text-white">IMPOSTOR <span class="text-indigo-500">AI</span></h1>
-                <p class="text-slate-500 text-sm">Powered by Gemini 2.5 Flash</p>
+                <p class="text-slate-500 text-sm">Powered by Gemini 1.5 Flash</p>
             </div>
             
             <div class="glass p-8 rounded-[2rem] max-w-sm mx-auto space-y-6 shadow-2xl">
@@ -52,9 +49,7 @@
             </div>
         </div>
 
-        <!-- PANTALLA JUEGO -->
         <div id="view-game" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6 py-8">
-            <!-- Lateral: Jugadores -->
             <div class="lg:col-span-4 space-y-4">
                 <div class="glass p-6 rounded-[2rem]">
                     <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-6 border-b border-white/5 pb-2">Red de Agentes</h3>
@@ -67,32 +62,27 @@
                         <span class="text-[10px] bg-indigo-500/10 text-indigo-400 px-2 py-0.5 rounded-full">Oculto</span>
                     </div>
                     <div id="role-reveal" class="mt-4 font-black text-2xl blur-md group-hover:blur-0 transition-all duration-500 uppercase tracking-widest">???</div>
-                    <p id="role-word" class="text-sm text-slate-400 mt-2 opacity-0 group-hover:opacity-100 italic transition-all">Sincronizando datos...</p>
+                    <p id="role-word" class="text-sm text-slate-400 mt-2 opacity-0 group-hover:opacity-100 italic transition-all">Sincronizando...</p>
                 </div>
             </div>
 
-            <!-- Principal: Chat -->
             <div class="lg:col-span-8 space-y-4">
                 <div class="glass h-[500px] rounded-[2.5rem] flex flex-col overflow-hidden relative border border-white/5">
                     <div id="chat-feed" class="flex-1 p-8 overflow-y-auto chat-scroll space-y-6"></div>
                     
-                    <!-- Estado IA -->
                     <div id="ai-status-indicator" class="px-8 py-2 bg-slate-900/50 flex items-center gap-3 hidden border-t border-white/5">
                         <div class="h-2 w-2 bg-indigo-500 rounded-full animate-ping"></div>
                         <span id="ai-status-msg" class="text-[10px] font-bold text-indigo-400 uppercase">Gemini está pensando...</span>
                     </div>
 
-                    <!-- Input Humano -->
                     <div id="input-container" class="p-6 bg-slate-950/50 border-t border-white/5 flex gap-3">
                         <input type="text" id="word-input" placeholder="Tu turno..." class="flex-1 bg-slate-900 border border-slate-800 p-4 rounded-2xl outline-none focus:border-indigo-500 text-sm disabled:opacity-30" disabled>
                         <button id="btn-send" class="bg-indigo-600 text-white px-8 rounded-2xl font-black text-xs hover:bg-indigo-500 transition-all disabled:opacity-30" disabled>ENVIAR</button>
                     </div>
 
-                    <!-- Votación -->
                     <div id="voting-overlay" class="absolute inset-0 bg-slate-950/98 z-30 hidden flex flex-col items-center justify-center p-10 text-center">
                         <div class="mb-8">
                             <h2 class="text-3xl font-black text-red-500 uppercase italic">Votación en Curso</h2>
-                            <p class="text-slate-500 text-sm mt-2">Identifica al agente impostor en la red</p>
                         </div>
                         <div id="voting-grid" class="grid grid-cols-2 gap-4 w-full max-w-md"></div>
                     </div>
@@ -100,18 +90,17 @@
             </div>
         </div>
 
-        <!-- PANTALLA RESULTADO -->
         <div id="view-result" class="hidden py-12 text-center space-y-8">
             <h2 id="result-title" class="text-7xl font-black italic tracking-tighter">---</h2>
             <div class="glass p-10 rounded-[3rem] max-w-lg mx-auto space-y-6">
                 <p id="result-msg" class="text-xl text-slate-300 font-light leading-relaxed">---</p>
                 <div class="grid grid-cols-2 gap-4">
                     <div class="bg-slate-950 p-6 rounded-3xl border border-white/5">
-                        <span class="text-[10px] uppercase font-bold text-slate-500 block mb-2">Palabra Civiles</span>
+                        <span class="text-[10px] uppercase font-bold text-slate-500 block mb-2">Civiles</span>
                         <b id="reveal-c" class="text-2xl text-indigo-400 uppercase tracking-widest">-</b>
                     </div>
                     <div class="bg-slate-950 p-6 rounded-3xl border border-red-500/10">
-                        <span class="text-[10px] uppercase font-bold text-slate-500 block mb-2">Palabra Impostor</span>
+                        <span class="text-[10px] uppercase font-bold text-slate-500 block mb-2">Impostor</span>
                         <b id="reveal-i" class="text-2xl text-red-500 uppercase tracking-widest">-</b>
                     </div>
                 </div>
@@ -121,32 +110,45 @@
     </div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, updateDoc, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, updateDoc, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
 
-        // GLOBAL CONFIG
-        const firebaseConfig = JSON.parse(__firebase_config);
+        // --- CONFIGURACIÓN CRÍTICA ---
+        // 1. REEMPLAZA ESTO CON TUS DATOS DE FIREBASE SI NO USAS EL ENTORNO ORIGINAL
+        const firebaseConfig = window.__firebase_config ? JSON.parse(window.__firebase_config) : {
+            apiKey: "TU_API_KEY_FIREBASE",
+            authDomain: "TU_PROYECTO.firebaseapp.com",
+            projectId: "TU_PROYECTO_ID",
+            storageBucket: "TU_PROYECTO.appspot.com",
+            messagingSenderId: "TU_SENDER_ID",
+            appId: "TU_APP_ID"
+        };
+
+        // 2. COLOCA AQUÍ TU API KEY DE GOOGLE AI (GEMINI)
+        const geminiApiKey = "TU_API_KEY_DE_GEMINI"; 
+
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'impostor-gemini-pro';
-        const apiKey = "";
+        const appId = window.__app_id || 'impostor-game-v1';
 
         const WORDS_DB = [
             {c: "Gato", i: "Tigre"}, {c: "Youtube", i: "Twitch"}, {c: "Pizza", i: "Hamburguesa"},
             {c: "Doctor", i: "Enfermero"}, {c: "Bosque", i: "Selva"}, {c: "Oro", i: "Plata"},
             {c: "Tenedor", i: "Cuchara"}, {c: "Guitarra", i: "Violín"}, {c: "Coche", i: "Moto"}
         ];
-        const BOT_NAMES = ["Gemini-1", "Gemini-2", "Gemini-3"];
+        const BOT_NAMES = ["Gemini-Alpha", "Gemini-Beta", "Gemini-Gamma"];
 
         let state = { user: null, roomId: null, data: null, isProcessingAI: false };
 
         // UI HELPERS
         const setStatus = (msg, isError = false) => {
             const el = document.getElementById('status-text');
-            el.innerText = msg.toUpperCase();
-            el.className = isError ? 'error-pulse font-bold' : 'text-indigo-400';
+            if(el) {
+                el.innerText = msg.toUpperCase();
+                el.className = isError ? 'error-pulse font-bold' : 'text-indigo-400';
+            }
         };
         const setAIDebug = (msg) => document.getElementById('ai-debug').innerText = `GEMINI: ${msg.toUpperCase()}`;
         const showView = (id) => {
@@ -154,24 +156,37 @@
             document.getElementById(id).classList.remove('hidden');
         };
 
-        // AUTHENTICATION
+        // AUTH
         async function initAuth() {
             try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-            } catch (e) { setStatus("Error de Acceso", true); }
+                await signInAnonymously(auth);
+            } catch (e) { 
+                console.error(e);
+                setStatus("Error de Conexión Firebase", true); 
+                document.getElementById('loading-text').innerText = "Error: Configura Firebase correctamente";
+            }
         }
-        onAuthStateChanged(auth, u => { if(u) { state.user = u; setStatus("Agente Online"); showView('view-setup'); } });
+
+        onAuthStateChanged(auth, u => { 
+            if(u) { 
+                state.user = u; 
+                setStatus("Agente Online"); 
+                showView('view-setup'); 
+            } 
+        });
+
         initAuth();
 
-        // GAME CREATION
+        // LOGICA DE JUEGO
         document.getElementById('btn-create').onclick = async () => {
+            if(!geminiApiKey || geminiApiKey.includes("TU_API_KEY")) {
+                alert("Debes configurar tu geminiApiKey en el código primero.");
+                return;
+            }
+
             const btn = document.getElementById('btn-create');
             btn.disabled = true;
-            setStatus("Generando Sesión...");
+            setStatus("Generando Red...");
             
             try {
                 const name = document.getElementById('player-name').value || "Agente";
@@ -189,65 +204,60 @@
                     turnIdx: 0, words: pair, status: 'active', lastUpdate: Date.now()
                 };
 
-                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'rooms', rId), room);
+                await setDoc(doc(db, 'rooms', rId), room);
                 state.roomId = rId;
                 startRoomListener(rId);
             } catch (e) { 
+                console.error(e);
                 btn.disabled = false; 
-                setStatus("Fallo de Red", true); 
+                setStatus("Error al crear sala", true); 
             }
         };
 
         function startRoomListener(id) {
-            onSnapshot(doc(db, 'artifacts', appId, 'public', 'data', 'rooms', id), (snap) => {
+            onSnapshot(doc(db, 'rooms', id), (snap) => {
                 if(!snap.exists()) return;
                 state.data = snap.data();
                 renderUI();
                 handleGameLogic();
-            }, (err) => console.error("Snapshot error:", err));
+            });
         }
 
         async function handleGameLogic() {
             if(state.isProcessingAI) return;
             const d = state.data;
-            if(!d || d.status === 'error' || d.phase === 'ended') return;
+            if(!d || d.status !== 'active' || d.phase === 'ended') return;
 
-            if(d.phase === 'words') {
-                const current = d.players[d.turnIdx];
-                if(current && current.isBot) {
-                    state.isProcessingAI = true;
-                    toggleAILoader(true, `${current.name} PROCESANDO...`);
+            const current = d.players[d.turnIdx];
+
+            // Turno de la IA
+            if(d.phase === 'words' && current && current.isBot) {
+                state.isProcessingAI = true;
+                toggleAILoader(true, `${current.name} analizando...`);
+                
+                try {
+                    const wordToDescribe = current.role === 'impostor' ? d.words.i : d.words.c;
+                    const historyText = d.history.map(h => h.word).join(", ");
                     
-                    try {
-                        const word = current.role === 'impostor' ? d.words.i : d.words.c;
-                        const context = d.history.map(h => h.word).join(", ");
-                        
-                        const prompt = `Eres una IA jugando a "El Impostor". Tu palabra secreta es "${word}". 
-                                       Historial de palabras dichas: [${context}]. 
-                                       REGLA DE ORO: Responde ÚNICAMENTE con UNA SOLA PALABRA que describa la tuya sin ser obvia. 
-                                       No uses frases, ni puntos, ni explicaciones. Solo la palabra.`;
+                    const prompt = `Juego: "El Impostor". Tu palabra: "${wordToDescribe}". Historial: [${historyText}]. 
+                    REGLA: Responde con UNA SOLA PALABRA relacionada pero no obvia. No uses la propia palabra. Solo la palabra, nada más.`;
 
-                        const response = await callGeminiAPI(prompt);
-                        const cleanWord = response.trim().replace(/[^\wáéíóúÁÉÍÓÚ]/g, '').split(/\s+/)[0];
+                    const response = await callGeminiAPI(prompt);
+                    const cleanWord = response.trim().replace(/[^\w]/g, '').split(/\s+/)[0];
 
-                        if(!cleanWord || cleanWord.length > 20) {
-                            throw new Error("Respuesta de IA corrupta o demasiado larga");
-                        }
-
-                        setAIDebug(`OK: ${cleanWord}`);
+                    if(cleanWord) {
                         await pushWord(current.id, cleanWord);
-                    } catch (e) {
-                        console.error("AI Error:", e);
-                        setAIDebug("FALLO CRÍTICO");
-                        setStatus("IA Desconectada (Error 403/500)", true);
-                        await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'rooms', state.roomId), { status: 'error' });
-                    } finally {
-                        toggleAILoader(false);
-                        state.isProcessingAI = false;
                     }
+                } catch (e) {
+                    console.error("Gemini Error:", e);
+                    setAIDebug("FALLO DE API");
+                } finally {
+                    state.isProcessingAI = false;
+                    toggleAILoader(false);
                 }
             }
 
+            // Votación de la IA
             if(d.phase === 'voting') {
                 const botToVote = d.players.find(p => p.isBot && !p.votedFor);
                 if(botToVote) {
@@ -257,45 +267,25 @@
                         const target = candidates[Math.floor(Math.random() * candidates.length)].id;
                         await pushVote(botToVote.id, target);
                         state.isProcessingAI = false;
-                    }, 2000);
+                    }, 1500);
                 }
             }
         }
 
-        async function callGeminiAPI(prompt, retries = 5) {
-            for(let i = 0; i < retries; i++) {
-                try {
-                    setAIDebug(`Llamando (Intento ${i+1})`);
-                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({ 
-                            contents: [{ parts: [{ text: prompt }] }]
-                        })
-                    });
-                    
-                    if(!res.ok) {
-                        const errBody = await res.json().catch(() => ({}));
-                        throw new Error(`HTTP ${res.status}: ${errBody.error?.message || 'Error desconocido'}`);
-                    }
-                    
-                    const json = await res.json();
-                    const text = json.candidates?.[0]?.content?.parts?.[0]?.text;
-                    if(!text) throw new Error("Candidato vacío");
-                    return text;
-                } catch (e) {
-                    if(i === retries - 1) throw e;
-                    const delay = Math.pow(2, i) * 1000;
-                    setAIDebug(`Reintentando en ${delay/1000}s...`);
-                    await new Promise(r => setTimeout(r, delay));
-                }
-            }
+        async function callGeminiAPI(prompt) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`;
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+            });
+            const json = await res.json();
+            return json.candidates?.[0]?.content?.parts?.[0]?.text || "Misterio";
         }
 
         async function pushWord(pid, word) {
-            const ref = doc(db, 'artifacts', appId, 'public', 'data', 'rooms', state.roomId);
+            const ref = doc(db, 'rooms', state.roomId);
             const snap = await getDoc(ref);
-            if(!snap.exists()) return;
             const d = snap.data();
             const history = [...d.history, { playerId: pid, word }];
             let turnIdx = d.turnIdx + 1;
@@ -305,24 +295,18 @@
         }
 
         async function pushVote(voterId, targetId) {
-            const ref = doc(db, 'artifacts', appId, 'public', 'data', 'rooms', state.roomId);
+            const ref = doc(db, 'rooms', state.roomId);
             const snap = await getDoc(ref);
-            if(!snap.exists()) return;
             const d = snap.data();
             const players = d.players.map(p => p.id === voterId ? {...p, votedFor: targetId} : p);
             const allVoted = players.every(p => p.votedFor);
-            await updateDoc(ref, { players, phase: allVoted ? 'ended' : d.phase, lastUpdate: Date.now() });
+            await updateDoc(ref, { players, phase: allVoted ? 'ended' : d.phase });
         }
 
         function renderUI() {
             const d = state.data;
             if(!d) return;
             showView('view-game');
-            if(d.status === 'error') {
-                setStatus("IA DESCONECTADA - JUEGO PAUSADO", true);
-            } else {
-                setStatus(d.phase === 'words' ? "Protocolo de Comunicación" : "Protocolo de Exclusión");
-            }
 
             document.getElementById('player-list').innerHTML = d.players.map((p, i) => `
                 <div class="flex justify-between items-center p-4 rounded-2xl transition-all ${d.turnIdx === i && d.phase === 'words' ? 'turn-active' : 'bg-slate-900/50 border border-white/5'}">
@@ -330,7 +314,7 @@
                         <div class="h-1.5 w-1.5 rounded-full ${p.isBot ? 'bg-indigo-500' : 'bg-emerald-500'}"></div>
                         <span class="text-xs font-bold ${p.id === state.user.uid ? 'text-indigo-400' : 'text-slate-300'}">${p.name}</span>
                     </div>
-                    ${p.votedFor ? '<span class="text-[8px] bg-red-500/10 text-red-500 px-2 py-0.5 rounded font-bold uppercase">Listo</span>' : ''}
+                    ${p.votedFor ? '<span class="text-[8px] bg-indigo-500/20 text-indigo-400 px-2 py-0.5 rounded font-bold">VOTÓ</span>' : ''}
                 </div>
             `).join('');
 
@@ -338,24 +322,23 @@
                 const p = d.players.find(pl => pl.id === h.playerId);
                 const isMe = h.playerId === state.user.uid;
                 return `
-                    <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'} transition-all">
-                        <span class="text-[8px] text-slate-500 mb-1 px-2 uppercase font-bold">${p?.name}</span>
-                        <div class="${isMe ? 'bg-indigo-600' : 'bg-slate-800'} px-5 py-2.5 rounded-2xl text-sm font-bold shadow-lg border border-white/5">
+                    <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
+                        <span class="text-[8px] text-slate-500 mb-1 px-2 uppercase">${p?.name}</span>
+                        <div class="${isMe ? 'bg-indigo-600' : 'bg-slate-800'} px-5 py-2.5 rounded-2xl text-sm font-bold border border-white/5">
                             ${h.word}
                         </div>
                     </div>
                 `;
             }).join('');
+            
             const feed = document.getElementById('chat-feed');
             feed.scrollTop = feed.scrollHeight;
 
             const me = d.players.find(p => p.id === state.user.uid);
-            const roleEl = document.getElementById('role-reveal');
-            roleEl.innerText = me.role;
-            roleEl.className = `mt-4 font-black text-2xl blur-md group-hover:blur-0 transition-all ${me.role === 'impostor' ? 'text-red-500' : 'text-indigo-400'}`;
+            document.getElementById('role-reveal').innerText = me.role;
             document.getElementById('role-word').innerText = `Tu Palabra: ${me.role === 'impostor' ? d.words.i : d.words.c}`;
 
-            const isMyTurn = d.phase === 'words' && d.players[d.turnIdx].id === state.user.uid && d.status !== 'error';
+            const isMyTurn = d.phase === 'words' && d.players[d.turnIdx].id === state.user.uid;
             document.getElementById('word-input').disabled = !isMyTurn;
             document.getElementById('btn-send').disabled = !isMyTurn;
 
@@ -365,21 +348,13 @@
                 document.getElementById('voting-grid').innerHTML = d.players
                     .filter(p => p.id !== state.user.uid)
                     .map(p => `
-                        <button onclick="window.votar('${p.id}')" class="bg-slate-900 border border-white/10 p-5 rounded-3xl hover:border-red-500 hover:bg-red-500/5 transition-all font-black text-xs uppercase tracking-widest text-slate-400 hover:text-red-500">
+                        <button onclick="window.votar('${p.id}')" class="bg-slate-900 border border-white/10 p-5 rounded-3xl hover:border-red-500 transition-all font-black text-xs uppercase text-slate-400">
                             ${p.name}
                         </button>
                     `).join('');
             } else { vOverlay.classList.add('hidden'); }
 
             if(d.phase === 'ended') renderResults(d);
-        }
-
-        function toggleAILoader(show, msg) {
-            const el = document.getElementById('ai-status-indicator');
-            if(show) {
-                el.classList.remove('hidden');
-                document.getElementById('ai-status-msg').innerText = msg;
-            } else { el.classList.add('hidden'); }
         }
 
         window.votar = (tid) => pushVote(state.user.uid, tid);
@@ -398,7 +373,7 @@
 
             document.getElementById('result-title').innerText = win ? "VICTORIA CIVIL" : "VICTORIA IMPOSTOR";
             document.getElementById('result-title').className = win ? "text-6xl font-black text-indigo-500 italic" : "text-6xl font-black text-red-600 italic";
-            document.getElementById('result-msg').innerText = `El grupo ha expulsado a ${accused.name}. El impostor era ${win ? 'finalmente capturado' : 'demasiado astuto'}.`;
+            document.getElementById('result-msg').innerText = `El grupo expulsó a ${accused.name}.`;
             document.getElementById('reveal-c').innerText = d.words.c;
             document.getElementById('reveal-i').innerText = d.words.i;
         }
@@ -409,6 +384,13 @@
             if(val) { pushWord(state.user.uid, val); input.value = ''; }
         };
 
+        function toggleAILoader(show, msg) {
+            const el = document.getElementById('ai-status-indicator');
+            if(show) {
+                el.classList.remove('hidden');
+                document.getElementById('ai-status-msg').innerText = msg;
+            } else { el.classList.add('hidden'); }
+        }
     </script>
 </body>
 </html>
