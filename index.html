@@ -3,47 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Impostor AI - Operativo</title>
+    <title>Impostor AI - V3 Operativa</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Outfit', sans-serif; background-color: #020617; color: #f8fafc; overflow-x: hidden; }
+        body { font-family: 'Outfit', sans-serif; background-color: #020617; color: #f8fafc; }
         .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
         .turn-active { border: 2px solid #6366f1; background: rgba(99, 102, 241, 0.1); box-shadow: 0 0 15px rgba(99, 102, 241, 0.2); }
         .hidden { display: none !important; }
         .chat-scroll::-webkit-scrollbar { width: 4px; }
         .chat-scroll::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
-        @keyframes pulse-red { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .error-pulse { animation: pulse-red 2s infinite; color: #ef4444; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center p-4">
 
     <div id="app" class="max-w-4xl w-full">
         <div id="status-bar" class="fixed top-0 left-0 w-full bg-slate-900 border-b border-white/10 text-center text-[10px] font-mono py-1 z-50 flex justify-center gap-4">
-            <span>SISTEMA: <span id="status-text" class="text-indigo-400">CONECTANDO</span></span>
+            <span>SISTEMA: <span id="status-text" class="text-indigo-400">INICIANDO</span></span>
             <span id="ai-debug" class="text-slate-500">IA: STANDBY</span>
         </div>
 
-        <div id="view-loading" class="py-24 text-center space-y-6">
-            <div class="relative inline-block">
-                <div class="h-16 w-16 rounded-full border-4 border-indigo-500/20 border-t-indigo-500 animate-spin"></div>
-            </div>
-            <p class="text-slate-400 font-bold uppercase tracking-widest text-xs">Sincronizando con Firebase...</p>
+        <div id="view-loading" class="py-24 text-center">
+            <div class="h-16 w-16 mx-auto rounded-full border-4 border-indigo-500/20 border-t-indigo-500 animate-spin"></div>
+            <p class="mt-4 text-slate-400 text-xs uppercase tracking-widest">Sincronizando Firebase...</p>
         </div>
 
         <div id="view-setup" class="hidden py-12 text-center space-y-8">
-            <div class="space-y-2">
-                <h1 class="text-6xl font-black italic tracking-tighter text-white">IMPOSTOR <span class="text-indigo-500">AI</span></h1>
-                <p class="text-slate-500 text-sm">Protocolo OpenRouter Activado</p>
-            </div>
-            
-            <div class="glass p-8 rounded-[2rem] max-w-sm mx-auto space-y-6 shadow-2xl">
-                <div class="text-left space-y-1">
-                    <label class="text-[10px] uppercase font-bold text-slate-500 ml-1">Tu Identidad</label>
-                    <input type="text" id="player-name" value="Agente Humano" class="w-full bg-slate-950 border border-slate-800 p-4 rounded-2xl outline-none focus:border-indigo-500 transition-all text-sm">
-                </div>
-                <button id="btn-create" class="w-full bg-indigo-600 hover:bg-indigo-500 p-5 rounded-2xl font-black text-sm tracking-widest shadow-lg shadow-indigo-500/20 transition-all active:scale-95">
+            <h1 class="text-6xl font-black italic text-white">IMPOSTOR <span class="text-indigo-500">AI</span></h1>
+            <div class="glass p-8 rounded-[2rem] max-w-sm mx-auto space-y-6">
+                <input type="text" id="player-name" value="Agente Humano" class="w-full bg-slate-950 border border-slate-800 p-4 rounded-2xl outline-none focus:border-indigo-500 text-sm">
+                <button id="btn-create" class="w-full bg-indigo-600 hover:bg-indigo-500 p-5 rounded-2xl font-black text-sm tracking-widest transition-all">
                     INICIAR SIMULACIÓN
                 </button>
             </div>
@@ -52,33 +41,28 @@
         <div id="view-game" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6 py-8">
             <div class="lg:col-span-4 space-y-4">
                 <div class="glass p-6 rounded-[2rem]">
-                    <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-6 border-b border-white/5 pb-2">Red de Agentes</h3>
+                    <h3 class="text-[10px] font-bold text-slate-500 uppercase mb-4">Red de Agentes</h3>
                     <div id="player-list" class="space-y-3"></div>
                 </div>
-
-                <div id="role-card" class="glass p-6 rounded-[2rem] border-l-4 border-indigo-600 cursor-pointer group transition-all hover:bg-white/[0.02]">
-                    <p class="text-[10px] font-bold text-slate-500 uppercase">Datos Clasificados (Pasa el ratón)</p>
-                    <div id="role-reveal" class="mt-4 font-black text-2xl blur-md group-hover:blur-0 transition-all duration-500 uppercase tracking-widest">???</div>
-                    <p id="role-word" class="text-sm text-slate-400 mt-2 opacity-0 group-hover:opacity-100 italic transition-all">...</p>
+                <div id="role-card" class="glass p-6 rounded-[2rem] border-l-4 border-indigo-600 group cursor-pointer">
+                    <p class="text-[10px] text-slate-500 uppercase">Clasificado (Pasa el cursor)</p>
+                    <div id="role-reveal" class="mt-2 font-black text-2xl blur-md group-hover:blur-0 transition-all uppercase">???</div>
+                    <p id="role-word" class="text-sm text-slate-400 mt-1 opacity-0 group-hover:opacity-100 italic">...</p>
                 </div>
             </div>
 
             <div class="lg:col-span-8 space-y-4">
-                <div class="glass h-[550px] rounded-[2.5rem] flex flex-col overflow-hidden relative border border-white/5">
-                    <div id="chat-feed" class="flex-1 p-8 overflow-y-auto chat-scroll space-y-6"></div>
-                    
-                    <div id="ai-status-indicator" class="px-8 py-2 bg-slate-900/50 flex items-center gap-3 hidden border-t border-white/5">
-                        <div class="h-2 w-2 bg-indigo-500 rounded-full animate-ping"></div>
-                        <span id="ai-status-msg" class="text-[10px] font-bold text-indigo-400 uppercase">La IA está procesando...</span>
+                <div class="glass h-[500px] rounded-[2.5rem] flex flex-col overflow-hidden relative">
+                    <div id="chat-feed" class="flex-1 p-8 overflow-y-auto chat-scroll space-y-4"></div>
+                    <div id="ai-status-indicator" class="px-8 py-2 bg-slate-900/50 hidden border-t border-white/5">
+                        <span id="ai-status-msg" class="text-[10px] font-bold text-indigo-400 uppercase animate-pulse">La IA está analizando datos...</span>
                     </div>
-
-                    <div id="input-container" class="p-6 bg-slate-950/50 border-t border-white/5 flex gap-3">
-                        <input type="text" id="word-input" placeholder="Tu turno..." class="flex-1 bg-slate-900 border border-slate-800 p-4 rounded-2xl outline-none focus:border-indigo-500 text-sm disabled:opacity-30" disabled>
-                        <button id="btn-send" class="bg-indigo-600 text-white px-8 rounded-2xl font-black text-xs hover:bg-indigo-500 transition-all disabled:opacity-30" disabled>ENVIAR</button>
+                    <div class="p-6 bg-slate-950/50 border-t border-white/5 flex gap-3">
+                        <input type="text" id="word-input" placeholder="Tu turno..." class="flex-1 bg-slate-900 border border-slate-800 p-4 rounded-2xl outline-none text-sm disabled:opacity-30" disabled>
+                        <button id="btn-send" class="bg-indigo-600 px-8 rounded-2xl font-black text-xs disabled:opacity-30" disabled>ENVIAR</button>
                     </div>
-
-                    <div id="voting-overlay" class="absolute inset-0 bg-slate-950/98 z-30 hidden flex flex-col items-center justify-center p-10 text-center">
-                        <h2 class="text-3xl font-black text-red-500 uppercase italic mb-8">Votación Necesaria</h2>
+                    <div id="voting-overlay" class="absolute inset-0 bg-slate-950/95 hidden flex flex-col items-center justify-center p-10 z-40">
+                        <h2 class="text-2xl font-black text-red-500 mb-6 uppercase">IDENTIFICA AL IMPOSTOR</h2>
                         <div id="voting-grid" class="grid grid-cols-2 gap-4 w-full max-w-md"></div>
                     </div>
                 </div>
@@ -86,21 +70,15 @@
         </div>
 
         <div id="view-result" class="hidden py-12 text-center space-y-8">
-            <h2 id="result-title" class="text-7xl font-black italic tracking-tighter">---</h2>
-            <div class="glass p-10 rounded-[3rem] max-w-lg mx-auto space-y-6">
-                <p id="result-msg" class="text-xl text-slate-300">---</p>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="bg-slate-950 p-6 rounded-3xl border border-white/5">
-                        <span class="text-[10px] uppercase font-bold text-slate-500 block mb-2">Civiles</span>
-                        <b id="reveal-c" class="text-2xl text-indigo-400 uppercase tracking-widest">-</b>
-                    </div>
-                    <div class="bg-slate-950 p-6 rounded-3xl border border-red-500/10">
-                        <span class="text-[10px] uppercase font-bold text-slate-500 block mb-2">Impostor</span>
-                        <b id="reveal-i" class="text-2xl text-red-500 uppercase tracking-widest">-</b>
-                    </div>
+            <h2 id="result-title" class="text-6xl font-black italic">---</h2>
+            <div class="glass p-8 rounded-[2rem] max-w-md mx-auto">
+                <p id="result-msg" class="text-slate-300 mb-4">---</p>
+                <div class="grid grid-cols-2 gap-4 text-xs font-bold uppercase">
+                    <div class="p-4 bg-slate-950 rounded-xl border border-white/5">Civiles: <span id="reveal-c" class="text-indigo-400 block text-lg"></span></div>
+                    <div class="p-4 bg-slate-950 rounded-xl border border-red-500/10">Impostor: <span id="reveal-i" class="text-red-500 block text-lg"></span></div>
                 </div>
             </div>
-            <button onclick="location.reload()" class="bg-slate-800 hover:bg-indigo-600 px-12 py-5 rounded-3xl font-black text-sm transition-all">REINICIAR</button>
+            <button onclick="location.reload()" class="bg-indigo-600 hover:bg-indigo-500 px-10 py-4 rounded-2xl font-black text-sm transition-all">REINICIAR SISTEMA</button>
         </div>
     </div>
 
@@ -109,77 +87,70 @@
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, updateDoc, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
 
-        // CONFIGURACIÓN PROPORCIONADA
+        // CONFIGURACIÓN ACTUALIZADA
         const firebaseConfig = {
             apiKey: "AIzaSyAJ6vTwkcvu2k0YzBPYVGJ93iPISZeFBH0",
             authDomain: "impostorai.firebaseapp.com",
             projectId: "impostorai",
             storageBucket: "impostorai.firebasestorage.app",
             messagingSenderId: "102384806527",
-            appId: "1:102384806527:web:6a8cd2d7dbde219af8ad4a",
-            measurementId: "G-W0Q6JYL2NT"
+            appId: "1:102384806527:web:6a8cd2d7dbde219af8ad4a"
         };
         
-        const openRouterKey = "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";
+        const openRouterKey = "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";
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
         const WORDS_DB = [
-            {c: "Gato", i: "Tigre"}, {c: "Pizza", i: "Hamburguesa"}, {c: "Youtube", i: "Twitch"},
-            {c: "Playa", i: "Piscina"}, {c: "Coche", i: "Moto"}, {c: "Bosque", i: "Selva"}
+            {c: "Gato", i: "Tigre"}, {c: "Pizza", i: "Hamburguesa"}, {c: "Oro", i: "Plata"},
+            {c: "Playa", i: "Piscina"}, {c: "Coche", i: "Moto"}, {c: "Guitarra", i: "Violín"},
+            {c: "Libro", i: "Revista"}, {c: "Luna", i: "Sol"}
         ];
-        const BOT_NAMES = ["Bot-Alpha", "Bot-Beta", "Bot-Gamma"];
 
         let state = { user: null, roomId: null, data: null, isProcessingAI: false };
 
         // UI HELPERS
-        const setStatus = (msg, isError = false) => {
+        const setStatus = (msg, isErr = false) => {
             const el = document.getElementById('status-text');
             el.innerText = msg.toUpperCase();
-            el.className = isError ? 'error-pulse font-bold' : 'text-indigo-400';
+            el.className = isErr ? 'text-red-500 font-bold' : 'text-indigo-400';
         };
-        const setAIDebug = (msg) => document.getElementById('ai-debug').innerText = `IA: ${msg.toUpperCase()}`;
+
         const showView = (id) => {
             ['view-loading', 'view-setup', 'view-game', 'view-result'].forEach(v => document.getElementById(v).classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
         };
 
-        // AUTH
+        // LOGIN
         signInAnonymously(auth).catch(() => setStatus("Error Firebase", true));
-        onAuthStateChanged(auth, u => { if(u) { state.user = u; setStatus("Conectado"); showView('view-setup'); } });
+        onAuthStateChanged(auth, u => { if(u) { state.user = u; setStatus("Online"); showView('view-setup'); } });
 
-        // GAME CREATION
+        // INICIAR SALA
         document.getElementById('btn-create').onclick = async () => {
-            const btn = document.getElementById('btn-create');
-            btn.disabled = true;
-            setStatus("Creando Sala...");
+            const name = document.getElementById('player-name').value || "Humano";
+            setStatus("Iniciando...");
             
             try {
-                const name = document.getElementById('player-name').value || "Humano";
                 const rId = Math.random().toString(36).substring(7).toUpperCase();
                 const pair = WORDS_DB[Math.floor(Math.random() * WORDS_DB.length)];
 
                 let players = [{ id: state.user.uid, name, isBot: false, role: 'civil', votedFor: null }];
-                for(let i=0; i<3; i++) players.push({ id: `bot_${i}`, name: BOT_NAMES[i], isBot: true, role: 'civil', votedFor: null });
+                for(let i=0; i<3; i++) players.push({ id: `bot_${i}`, name: `IA-0${i+1}`, isBot: true, role: 'civil', votedFor: null });
                 
                 players.sort(() => Math.random() - 0.5);
                 players[Math.floor(Math.random() * players.length)].role = 'impostor';
 
-                const room = {
+                const roomData = {
                     code: rId, phase: 'words', players, history: [],
-                    turnIdx: 0, words: pair, status: 'active', lastUpdate: Date.now()
+                    turnIdx: 0, words: pair, lastUpdate: Date.now()
                 };
 
-                await setDoc(doc(db, 'rooms', rId), room);
+                await setDoc(doc(db, 'rooms', rId), roomData);
                 state.roomId = rId;
                 startRoomListener(rId);
-            } catch (e) { 
-                console.error(e);
-                btn.disabled = false; 
-                setStatus("Error de Red", true); 
-            }
+            } catch (e) { setStatus("Error de red", true); }
         };
 
         function startRoomListener(id) {
@@ -194,115 +165,92 @@
         async function handleGameLogic() {
             if(state.isProcessingAI) return;
             const d = state.data;
-            if(!d || d.phase === 'ended') return;
+            if(!d || d.phase !== 'words') return;
 
             const current = d.players[d.turnIdx];
 
-            // Turno de la IA
-            if(d.phase === 'words' && current?.isBot) {
+            if(current?.isBot) {
                 state.isProcessingAI = true;
-                toggleAILoader(true, `${current.name} pensando...`);
+                document.getElementById('ai-status-indicator').classList.remove('hidden');
                 
                 try {
-                    const secretWord = current.role === 'impostor' ? d.words.i : d.words.c;
+                    const secret = current.role === 'impostor' ? d.words.i : d.words.c;
                     const context = d.history.map(h => h.word).join(", ");
                     
-                    const prompt = `Estás jugando a "El Impostor". Tu palabra secreta es "${secretWord}". 
-                    Historial de palabras dichas: [${context}]. 
-                    OBJETIVO: Di UNA sola palabra que describa la tuya sin ser demasiado obvio. 
-                    REGLA: Responde ÚNICAMENTE con la palabra, sin puntos ni explicaciones.`;
+                    const prompt = `Juego "El Impostor". Palabra secreta: "${secret}". 
+                    Historial: [${context}]. 
+                    Di UNA palabra relacionada pero misteriosa. Responde SOLO con la palabra.`;
 
-                    const response = await callOpenRouterAPI(prompt);
-                    const cleanWord = response.trim().replace(/[^\w]/g, '').split(/\s+/)[0];
-
-                    if(cleanWord) {
-                        setAIDebug(`OK: ${cleanWord}`);
-                        await pushWord(current.id, cleanWord);
-                    }
+                    const word = await callOpenRouter(prompt);
+                    await pushWord(current.id, word || "...");
+                    document.getElementById('ai-debug').innerText = `IA: ${word}`;
                 } catch (e) {
+                    document.getElementById('ai-debug').innerText = "IA: ERROR API";
                     console.error(e);
-                    setAIDebug("Error IA");
                 } finally {
                     state.isProcessingAI = false;
-                    toggleAILoader(false);
-                }
-            }
-
-            // Votación de la IA
-            if(d.phase === 'voting') {
-                const botToVote = d.players.find(p => p.isBot && !p.votedFor);
-                if(botToVote) {
-                    state.isProcessingAI = true;
-                    setTimeout(async () => {
-                        const candidates = d.players.filter(p => p.id !== botToVote.id);
-                        const target = candidates[Math.floor(Math.random() * candidates.length)].id;
-                        await pushVote(botToVote.id, target);
-                        state.isProcessingAI = false;
-                    }, 2000);
+                    document.getElementById('ai-status-indicator').classList.add('hidden');
                 }
             }
         }
 
-        async function callOpenRouterAPI(prompt) {
-            const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${openRouterKey}`,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    "model": "google/gemini-flash-1.5",
-                    "messages": [{"role": "user", "content": prompt}]
-                })
-            });
-            const json = await res.json();
-            return json.choices[0].message.content;
+        async function callOpenRouter(prompt) {
+            try {
+                const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${openRouterKey}`,
+                        "Content-Type": "application/json",
+                        "HTTP-Referer": window.location.origin,
+                        "X-Title": "Impostor AI Game"
+                    },
+                    body: JSON.stringify({
+                        "model": "google/gemini-2.0-flash-lite-preview-02-05:free",
+                        "messages": [{"role": "user", "content": prompt}]
+                    })
+                });
+                const json = await res.json();
+                if(json.error) throw new Error(json.error.message);
+                return json.choices[0].message.content.trim().split(/\s+/)[0].replace(/[^\w]/g, '');
+            } catch(e) { throw e; }
         }
 
         async function pushWord(pid, word) {
             const ref = doc(db, 'rooms', state.roomId);
-            const snap = await getDoc(ref);
-            const d = snap.data();
-            const history = [...d.history, { playerId: pid, word }];
-            let turnIdx = d.turnIdx + 1;
-            let phase = d.phase;
-            if(turnIdx >= d.players.length) { turnIdx = 0; phase = 'voting'; }
+            const history = [...state.data.history, { playerId: pid, word }];
+            let turnIdx = state.data.turnIdx + 1;
+            let phase = state.data.phase;
+            if(turnIdx >= state.data.players.length) { turnIdx = 0; phase = 'voting'; }
             await updateDoc(ref, { history, turnIdx, phase, lastUpdate: Date.now() });
         }
 
         async function pushVote(voterId, targetId) {
             const ref = doc(db, 'rooms', state.roomId);
-            const snap = await getDoc(ref);
-            const d = snap.data();
-            const players = d.players.map(p => p.id === voterId ? {...p, votedFor: targetId} : p);
+            const players = state.data.players.map(p => p.id === voterId ? {...p, votedFor: targetId} : p);
             const allVoted = players.every(p => p.votedFor);
-            await updateDoc(ref, { players, phase: allVoted ? 'ended' : d.phase });
+            await updateDoc(ref, { players, phase: allVoted ? 'ended' : state.data.phase });
         }
 
         function renderUI() {
             const d = state.data;
-            if(!d) return;
             showView('view-game');
-
+            
+            // Lista jugadores
             document.getElementById('player-list').innerHTML = d.players.map((p, i) => `
-                <div class="flex justify-between items-center p-4 rounded-2xl transition-all ${d.turnIdx === i && d.phase === 'words' ? 'turn-active' : 'bg-slate-900/50 border border-white/5'}">
-                    <div class="flex items-center gap-3">
-                        <div class="h-1.5 w-1.5 rounded-full ${p.isBot ? 'bg-indigo-500' : 'bg-emerald-500'}"></div>
-                        <span class="text-xs font-bold ${p.id === state.user.uid ? 'text-indigo-400' : 'text-slate-300'}">${p.name}</span>
-                    </div>
-                    ${p.votedFor ? '<span class="text-[8px] bg-indigo-500/20 text-indigo-400 px-2 py-0.5 rounded font-bold">LISTO</span>' : ''}
+                <div class="p-3 rounded-xl flex justify-between ${d.turnIdx === i && d.phase === 'words' ? 'turn-active' : 'bg-slate-900/50'} transition-all">
+                    <span class="text-xs font-bold ${p.id === state.user.uid ? 'text-indigo-400' : ''}">${p.name}</span>
+                    ${p.votedFor ? '<span class="text-[8px] text-indigo-400 font-bold">VOTÓ</span>' : ''}
                 </div>
             `).join('');
 
+            // Chat
             document.getElementById('chat-feed').innerHTML = d.history.map(h => {
-                const p = d.players.find(pl => pl.id === h.playerId);
                 const isMe = h.playerId === state.user.uid;
+                const p = d.players.find(pl => pl.id === h.playerId);
                 return `
-                    <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'} animate-in fade-in duration-500">
-                        <span class="text-[8px] text-slate-500 mb-1 px-2 uppercase font-bold">${p?.name}</span>
-                        <div class="${isMe ? 'bg-indigo-600' : 'bg-slate-800'} px-5 py-2.5 rounded-2xl text-sm font-bold shadow-lg">
-                            ${h.word}
-                        </div>
+                    <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
+                        <span class="text-[8px] text-slate-500 uppercase px-2">${p?.name}</span>
+                        <div class="${isMe ? 'bg-indigo-600' : 'bg-slate-800'} px-4 py-2 rounded-xl text-sm font-bold border border-white/5 shadow-lg">${h.word}</div>
                     </div>
                 `;
             }).join('');
@@ -310,65 +258,54 @@
             const feed = document.getElementById('chat-feed');
             feed.scrollTop = feed.scrollHeight;
 
+            // Datos de rol
             const me = d.players.find(p => p.id === state.user.uid);
-            const roleEl = document.getElementById('role-reveal');
-            roleEl.innerText = me.role;
-            roleEl.className = `mt-4 font-black text-2xl blur-md group-hover:blur-0 transition-all ${me.role === 'impostor' ? 'text-red-500' : 'text-indigo-400'}`;
+            document.getElementById('role-reveal').innerText = me.role;
             document.getElementById('role-word').innerText = `Tu Palabra: ${me.role === 'impostor' ? d.words.i : d.words.c}`;
 
+            // Controles
             const isMyTurn = d.phase === 'words' && d.players[d.turnIdx].id === state.user.uid;
             document.getElementById('word-input').disabled = !isMyTurn;
             document.getElementById('btn-send').disabled = !isMyTurn;
 
+            // Votación
             const vOverlay = document.getElementById('voting-overlay');
-            if(d.phase === 'voting' && me && !me.votedFor) {
+            if(d.phase === 'voting' && !me.votedFor) {
                 vOverlay.classList.remove('hidden');
                 document.getElementById('voting-grid').innerHTML = d.players
                     .filter(p => p.id !== state.user.uid)
-                    .map(p => `
-                        <button onclick="window.votar('${p.id}')" class="bg-slate-900 border border-white/10 p-5 rounded-3xl hover:border-red-500 hover:text-red-500 transition-all font-black text-xs uppercase">
-                            ${p.name}
-                        </button>
-                    `).join('');
+                    .map(p => `<button onclick="window.votar('${p.id}')" class="bg-slate-900 border border-white/10 p-4 rounded-xl hover:text-red-500 font-bold text-xs uppercase transition-all">${p.name}</button>`).join('');
+                
+                // Bots votan automáticamente si les toca
+                d.players.forEach(p => {
+                    if(p.isBot && !p.votedFor) {
+                        setTimeout(() => pushVote(p.id, d.players[Math.floor(Math.random()*d.players.length)].id), 1500);
+                    }
+                });
             } else { vOverlay.classList.add('hidden'); }
 
-            if(d.phase === 'ended') renderResults(d);
+            // Fin
+            if(d.phase === 'ended') {
+                showView('view-result');
+                const votes = {};
+                d.players.forEach(p => votes[p.votedFor] = (votes[p.votedFor] || 0) + 1);
+                const accusedId = Object.keys(votes).reduce((a, b) => votes[a] > votes[b] ? a : b);
+                const accused = d.players.find(p => p.id === accusedId);
+                const win = accused.role === 'impostor';
+                
+                document.getElementById('result-title').innerText = win ? "SISTEMA LIMPIO" : "INFILTRADO GANADOR";
+                document.getElementById('result-title').className = win ? "text-5xl font-black text-indigo-500" : "text-5xl font-black text-red-500";
+                document.getElementById('result-msg').innerText = `El grupo expulsó a ${accused.name}.`;
+                document.getElementById('reveal-c').innerText = d.words.c;
+                document.getElementById('reveal-i').innerText = d.words.i;
+            }
         }
 
         window.votar = (tid) => pushVote(state.user.uid, tid);
-
-        function renderResults(d) {
-            showView('view-result');
-            const votes = {};
-            d.players.forEach(p => { if(p.votedFor) votes[p.votedFor] = (votes[p.votedFor] || 0) + 1; });
-            
-            let targetId = d.players[0].id;
-            let maxVotes = -1;
-            Object.entries(votes).forEach(([id, v]) => { if(v > maxVotes) { maxVotes = v; targetId = id; } });
-            
-            const accused = d.players.find(p => p.id === targetId);
-            const win = accused.role === 'impostor';
-
-            document.getElementById('result-title').innerText = win ? "VICTORIA CIVIL" : "VICTORIA IMPOSTOR";
-            document.getElementById('result-title').className = win ? "text-6xl font-black text-indigo-500 italic" : "text-6xl font-black text-red-600 italic";
-            document.getElementById('result-msg').innerText = `El grupo expulsó a ${accused.name}.`;
-            document.getElementById('reveal-c').innerText = d.words.c;
-            document.getElementById('reveal-i').innerText = d.words.i;
-        }
-
         document.getElementById('btn-send').onclick = () => {
             const input = document.getElementById('word-input');
-            const val = input.value.trim();
-            if(val) { pushWord(state.user.uid, val); input.value = ''; }
+            if(input.value.trim()) { pushWord(state.user.uid, input.value.trim()); input.value = ''; }
         };
-
-        function toggleAILoader(show, msg) {
-            const el = document.getElementById('ai-status-indicator');
-            if(show) {
-                el.classList.remove('hidden');
-                document.getElementById('ai-status-msg').innerText = msg;
-            } else { el.classList.add('hidden'); }
-        }
     </script>
 </body>
 </html>
