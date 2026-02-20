@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Impostor AI - Gemini Pro</title>
+    <title>Impostor AI - Operativo</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Outfit', sans-serif; background-color: #020617; color: #f8fafc; }
+        body { font-family: 'Outfit', sans-serif; background-color: #020617; color: #f8fafc; overflow-x: hidden; }
         .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
         .turn-active { border: 2px solid #6366f1; background: rgba(99, 102, 241, 0.1); box-shadow: 0 0 15px rgba(99, 102, 241, 0.2); }
         .hidden { display: none !important; }
@@ -22,20 +22,20 @@
     <div id="app" class="max-w-4xl w-full">
         <div id="status-bar" class="fixed top-0 left-0 w-full bg-slate-900 border-b border-white/10 text-center text-[10px] font-mono py-1 z-50 flex justify-center gap-4">
             <span>SISTEMA: <span id="status-text" class="text-indigo-400">CONECTANDO</span></span>
-            <span id="ai-debug" class="text-slate-500">GEMINI: ESPERANDO</span>
+            <span id="ai-debug" class="text-slate-500">IA: STANDBY</span>
         </div>
 
         <div id="view-loading" class="py-24 text-center space-y-6">
             <div class="relative inline-block">
                 <div class="h-16 w-16 rounded-full border-4 border-indigo-500/20 border-t-indigo-500 animate-spin"></div>
             </div>
-            <p id="loading-text" class="text-slate-400 font-bold uppercase tracking-widest text-xs">Inicializando Núcleo...</p>
+            <p class="text-slate-400 font-bold uppercase tracking-widest text-xs">Sincronizando con Firebase...</p>
         </div>
 
         <div id="view-setup" class="hidden py-12 text-center space-y-8">
             <div class="space-y-2">
                 <h1 class="text-6xl font-black italic tracking-tighter text-white">IMPOSTOR <span class="text-indigo-500">AI</span></h1>
-                <p class="text-slate-500 text-sm">Powered by Gemini 1.5 Flash</p>
+                <p class="text-slate-500 text-sm">Protocolo OpenRouter Activado</p>
             </div>
             
             <div class="glass p-8 rounded-[2rem] max-w-sm mx-auto space-y-6 shadow-2xl">
@@ -57,22 +57,19 @@
                 </div>
 
                 <div id="role-card" class="glass p-6 rounded-[2rem] border-l-4 border-indigo-600 cursor-pointer group transition-all hover:bg-white/[0.02]">
-                    <div class="flex justify-between items-start">
-                        <p class="text-[10px] font-bold text-slate-500 uppercase">Información Clasificada</p>
-                        <span class="text-[10px] bg-indigo-500/10 text-indigo-400 px-2 py-0.5 rounded-full">Oculto</span>
-                    </div>
+                    <p class="text-[10px] font-bold text-slate-500 uppercase">Datos Clasificados (Pasa el ratón)</p>
                     <div id="role-reveal" class="mt-4 font-black text-2xl blur-md group-hover:blur-0 transition-all duration-500 uppercase tracking-widest">???</div>
-                    <p id="role-word" class="text-sm text-slate-400 mt-2 opacity-0 group-hover:opacity-100 italic transition-all">Sincronizando...</p>
+                    <p id="role-word" class="text-sm text-slate-400 mt-2 opacity-0 group-hover:opacity-100 italic transition-all">...</p>
                 </div>
             </div>
 
             <div class="lg:col-span-8 space-y-4">
-                <div class="glass h-[500px] rounded-[2.5rem] flex flex-col overflow-hidden relative border border-white/5">
+                <div class="glass h-[550px] rounded-[2.5rem] flex flex-col overflow-hidden relative border border-white/5">
                     <div id="chat-feed" class="flex-1 p-8 overflow-y-auto chat-scroll space-y-6"></div>
                     
                     <div id="ai-status-indicator" class="px-8 py-2 bg-slate-900/50 flex items-center gap-3 hidden border-t border-white/5">
                         <div class="h-2 w-2 bg-indigo-500 rounded-full animate-ping"></div>
-                        <span id="ai-status-msg" class="text-[10px] font-bold text-indigo-400 uppercase">Gemini está pensando...</span>
+                        <span id="ai-status-msg" class="text-[10px] font-bold text-indigo-400 uppercase">La IA está procesando...</span>
                     </div>
 
                     <div id="input-container" class="p-6 bg-slate-950/50 border-t border-white/5 flex gap-3">
@@ -81,9 +78,7 @@
                     </div>
 
                     <div id="voting-overlay" class="absolute inset-0 bg-slate-950/98 z-30 hidden flex flex-col items-center justify-center p-10 text-center">
-                        <div class="mb-8">
-                            <h2 class="text-3xl font-black text-red-500 uppercase italic">Votación en Curso</h2>
-                        </div>
+                        <h2 class="text-3xl font-black text-red-500 uppercase italic mb-8">Votación Necesaria</h2>
                         <div id="voting-grid" class="grid grid-cols-2 gap-4 w-full max-w-md"></div>
                     </div>
                 </div>
@@ -93,7 +88,7 @@
         <div id="view-result" class="hidden py-12 text-center space-y-8">
             <h2 id="result-title" class="text-7xl font-black italic tracking-tighter">---</h2>
             <div class="glass p-10 rounded-[3rem] max-w-lg mx-auto space-y-6">
-                <p id="result-msg" class="text-xl text-slate-300 font-light leading-relaxed">---</p>
+                <p id="result-msg" class="text-xl text-slate-300">---</p>
                 <div class="grid grid-cols-2 gap-4">
                     <div class="bg-slate-950 p-6 rounded-3xl border border-white/5">
                         <span class="text-[10px] uppercase font-bold text-slate-500 block mb-2">Civiles</span>
@@ -105,7 +100,7 @@
                     </div>
                 </div>
             </div>
-            <button onclick="location.reload()" class="bg-slate-800 hover:bg-indigo-600 px-12 py-5 rounded-3xl font-black text-sm transition-all">NUEVA PARTIDA</button>
+            <button onclick="location.reload()" class="bg-slate-800 hover:bg-indigo-600 px-12 py-5 rounded-3xl font-black text-sm transition-all">REINICIAR</button>
         </div>
     </div>
 
@@ -114,82 +109,55 @@
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, updateDoc, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
 
-        // --- CONFIGURACIÓN CRÍTICA ---
-        // 1. REEMPLAZA ESTO CON TUS DATOS DE FIREBASE SI NO USAS EL ENTORNO ORIGINAL
-        const firebaseConfig = window.__firebase_config ? JSON.parse(window.__firebase_config) : {
-            apiKey: "TU_API_KEY_FIREBASE",
-            authDomain: "TU_PROYECTO.firebaseapp.com",
-            projectId: "TU_PROYECTO_ID",
-            storageBucket: "TU_PROYECTO.appspot.com",
-            messagingSenderId: "TU_SENDER_ID",
-            appId: "TU_APP_ID"
+        // CONFIGURACIÓN PROPORCIONADA
+        const firebaseConfig = {
+            apiKey: "AIzaSyAJ6vTwkcvu2k0YzBPYVGJ93iPISZeFBH0",
+            authDomain: "impostorai.firebaseapp.com",
+            projectId: "impostorai",
+            storageBucket: "impostorai.firebasestorage.app",
+            messagingSenderId: "102384806527",
+            appId: "1:102384806527:web:6a8cd2d7dbde219af8ad4a",
+            measurementId: "G-W0Q6JYL2NT"
         };
-
-        // 2. COLOCA AQUÍ TU API KEY DE GOOGLE AI (GEMINI)
-        const geminiApiKey = "TU_API_KEY_DE_GEMINI"; 
+        
+        const openRouterKey = "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";
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const appId = window.__app_id || 'impostor-game-v1';
 
         const WORDS_DB = [
-            {c: "Gato", i: "Tigre"}, {c: "Youtube", i: "Twitch"}, {c: "Pizza", i: "Hamburguesa"},
-            {c: "Doctor", i: "Enfermero"}, {c: "Bosque", i: "Selva"}, {c: "Oro", i: "Plata"},
-            {c: "Tenedor", i: "Cuchara"}, {c: "Guitarra", i: "Violín"}, {c: "Coche", i: "Moto"}
+            {c: "Gato", i: "Tigre"}, {c: "Pizza", i: "Hamburguesa"}, {c: "Youtube", i: "Twitch"},
+            {c: "Playa", i: "Piscina"}, {c: "Coche", i: "Moto"}, {c: "Bosque", i: "Selva"}
         ];
-        const BOT_NAMES = ["Gemini-Alpha", "Gemini-Beta", "Gemini-Gamma"];
+        const BOT_NAMES = ["Bot-Alpha", "Bot-Beta", "Bot-Gamma"];
 
         let state = { user: null, roomId: null, data: null, isProcessingAI: false };
 
         // UI HELPERS
         const setStatus = (msg, isError = false) => {
             const el = document.getElementById('status-text');
-            if(el) {
-                el.innerText = msg.toUpperCase();
-                el.className = isError ? 'error-pulse font-bold' : 'text-indigo-400';
-            }
+            el.innerText = msg.toUpperCase();
+            el.className = isError ? 'error-pulse font-bold' : 'text-indigo-400';
         };
-        const setAIDebug = (msg) => document.getElementById('ai-debug').innerText = `GEMINI: ${msg.toUpperCase()}`;
+        const setAIDebug = (msg) => document.getElementById('ai-debug').innerText = `IA: ${msg.toUpperCase()}`;
         const showView = (id) => {
             ['view-loading', 'view-setup', 'view-game', 'view-result'].forEach(v => document.getElementById(v).classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
         };
 
         // AUTH
-        async function initAuth() {
-            try {
-                await signInAnonymously(auth);
-            } catch (e) { 
-                console.error(e);
-                setStatus("Error de Conexión Firebase", true); 
-                document.getElementById('loading-text').innerText = "Error: Configura Firebase correctamente";
-            }
-        }
+        signInAnonymously(auth).catch(() => setStatus("Error Firebase", true));
+        onAuthStateChanged(auth, u => { if(u) { state.user = u; setStatus("Conectado"); showView('view-setup'); } });
 
-        onAuthStateChanged(auth, u => { 
-            if(u) { 
-                state.user = u; 
-                setStatus("Agente Online"); 
-                showView('view-setup'); 
-            } 
-        });
-
-        initAuth();
-
-        // LOGICA DE JUEGO
+        // GAME CREATION
         document.getElementById('btn-create').onclick = async () => {
-            if(!geminiApiKey || geminiApiKey.includes("TU_API_KEY")) {
-                alert("Debes configurar tu geminiApiKey en el código primero.");
-                return;
-            }
-
             const btn = document.getElementById('btn-create');
             btn.disabled = true;
-            setStatus("Generando Red...");
+            setStatus("Creando Sala...");
             
             try {
-                const name = document.getElementById('player-name').value || "Agente";
+                const name = document.getElementById('player-name').value || "Humano";
                 const rId = Math.random().toString(36).substring(7).toUpperCase();
                 const pair = WORDS_DB[Math.floor(Math.random() * WORDS_DB.length)];
 
@@ -210,7 +178,7 @@
             } catch (e) { 
                 console.error(e);
                 btn.disabled = false; 
-                setStatus("Error al crear sala", true); 
+                setStatus("Error de Red", true); 
             }
         };
 
@@ -226,31 +194,34 @@
         async function handleGameLogic() {
             if(state.isProcessingAI) return;
             const d = state.data;
-            if(!d || d.status !== 'active' || d.phase === 'ended') return;
+            if(!d || d.phase === 'ended') return;
 
             const current = d.players[d.turnIdx];
 
             // Turno de la IA
-            if(d.phase === 'words' && current && current.isBot) {
+            if(d.phase === 'words' && current?.isBot) {
                 state.isProcessingAI = true;
-                toggleAILoader(true, `${current.name} analizando...`);
+                toggleAILoader(true, `${current.name} pensando...`);
                 
                 try {
-                    const wordToDescribe = current.role === 'impostor' ? d.words.i : d.words.c;
-                    const historyText = d.history.map(h => h.word).join(", ");
+                    const secretWord = current.role === 'impostor' ? d.words.i : d.words.c;
+                    const context = d.history.map(h => h.word).join(", ");
                     
-                    const prompt = `Juego: "El Impostor". Tu palabra: "${wordToDescribe}". Historial: [${historyText}]. 
-                    REGLA: Responde con UNA SOLA PALABRA relacionada pero no obvia. No uses la propia palabra. Solo la palabra, nada más.`;
+                    const prompt = `Estás jugando a "El Impostor". Tu palabra secreta es "${secretWord}". 
+                    Historial de palabras dichas: [${context}]. 
+                    OBJETIVO: Di UNA sola palabra que describa la tuya sin ser demasiado obvio. 
+                    REGLA: Responde ÚNICAMENTE con la palabra, sin puntos ni explicaciones.`;
 
-                    const response = await callGeminiAPI(prompt);
+                    const response = await callOpenRouterAPI(prompt);
                     const cleanWord = response.trim().replace(/[^\w]/g, '').split(/\s+/)[0];
 
                     if(cleanWord) {
+                        setAIDebug(`OK: ${cleanWord}`);
                         await pushWord(current.id, cleanWord);
                     }
                 } catch (e) {
-                    console.error("Gemini Error:", e);
-                    setAIDebug("FALLO DE API");
+                    console.error(e);
+                    setAIDebug("Error IA");
                 } finally {
                     state.isProcessingAI = false;
                     toggleAILoader(false);
@@ -267,20 +238,25 @@
                         const target = candidates[Math.floor(Math.random() * candidates.length)].id;
                         await pushVote(botToVote.id, target);
                         state.isProcessingAI = false;
-                    }, 1500);
+                    }, 2000);
                 }
             }
         }
 
-        async function callGeminiAPI(prompt) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`;
-            const res = await fetch(url, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+        async function callOpenRouterAPI(prompt) {
+            const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${openRouterKey}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    "model": "google/gemini-flash-1.5",
+                    "messages": [{"role": "user", "content": prompt}]
+                })
             });
             const json = await res.json();
-            return json.candidates?.[0]?.content?.parts?.[0]?.text || "Misterio";
+            return json.choices[0].message.content;
         }
 
         async function pushWord(pid, word) {
@@ -314,7 +290,7 @@
                         <div class="h-1.5 w-1.5 rounded-full ${p.isBot ? 'bg-indigo-500' : 'bg-emerald-500'}"></div>
                         <span class="text-xs font-bold ${p.id === state.user.uid ? 'text-indigo-400' : 'text-slate-300'}">${p.name}</span>
                     </div>
-                    ${p.votedFor ? '<span class="text-[8px] bg-indigo-500/20 text-indigo-400 px-2 py-0.5 rounded font-bold">VOTÓ</span>' : ''}
+                    ${p.votedFor ? '<span class="text-[8px] bg-indigo-500/20 text-indigo-400 px-2 py-0.5 rounded font-bold">LISTO</span>' : ''}
                 </div>
             `).join('');
 
@@ -322,9 +298,9 @@
                 const p = d.players.find(pl => pl.id === h.playerId);
                 const isMe = h.playerId === state.user.uid;
                 return `
-                    <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
-                        <span class="text-[8px] text-slate-500 mb-1 px-2 uppercase">${p?.name}</span>
-                        <div class="${isMe ? 'bg-indigo-600' : 'bg-slate-800'} px-5 py-2.5 rounded-2xl text-sm font-bold border border-white/5">
+                    <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'} animate-in fade-in duration-500">
+                        <span class="text-[8px] text-slate-500 mb-1 px-2 uppercase font-bold">${p?.name}</span>
+                        <div class="${isMe ? 'bg-indigo-600' : 'bg-slate-800'} px-5 py-2.5 rounded-2xl text-sm font-bold shadow-lg">
                             ${h.word}
                         </div>
                     </div>
@@ -335,7 +311,9 @@
             feed.scrollTop = feed.scrollHeight;
 
             const me = d.players.find(p => p.id === state.user.uid);
-            document.getElementById('role-reveal').innerText = me.role;
+            const roleEl = document.getElementById('role-reveal');
+            roleEl.innerText = me.role;
+            roleEl.className = `mt-4 font-black text-2xl blur-md group-hover:blur-0 transition-all ${me.role === 'impostor' ? 'text-red-500' : 'text-indigo-400'}`;
             document.getElementById('role-word').innerText = `Tu Palabra: ${me.role === 'impostor' ? d.words.i : d.words.c}`;
 
             const isMyTurn = d.phase === 'words' && d.players[d.turnIdx].id === state.user.uid;
@@ -348,7 +326,7 @@
                 document.getElementById('voting-grid').innerHTML = d.players
                     .filter(p => p.id !== state.user.uid)
                     .map(p => `
-                        <button onclick="window.votar('${p.id}')" class="bg-slate-900 border border-white/10 p-5 rounded-3xl hover:border-red-500 transition-all font-black text-xs uppercase text-slate-400">
+                        <button onclick="window.votar('${p.id}')" class="bg-slate-900 border border-white/10 p-5 rounded-3xl hover:border-red-500 hover:text-red-500 transition-all font-black text-xs uppercase">
                             ${p.name}
                         </button>
                     `).join('');
